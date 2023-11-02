@@ -14,4 +14,4 @@ def clean_kleene(regex):
     return regex
 
 def gen_alphabet(regex):
-    return set(regex) - set('()|*')
+    return set(regex) - set('()+*')

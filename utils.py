@@ -77,13 +77,13 @@ class RegexNode:
                     kleene = i
                 continue
 
-            if regex[i] == '|':
+            if regex[i] == '+':
                 if or_operator == -1:
                     or_operator = i
         
         if or_operator != -1:
 
-            self.item = '|'
+            self.item = '+'
             self.children.append(RegexNode(self.trim_brackets(regex[:or_operator])))
             self.children.append(RegexNode(self.trim_brackets(regex[(or_operator+1):])))
         elif concatenation != -1:
@@ -129,7 +129,7 @@ class RegexNode:
                     if j not in followpos[i][1]:
                         followpos[i][1] = sorted(followpos[i][1] + [j])
 
-        elif self.item == '|':
+        elif self.item == '+':
 
             self.firstpos = sorted(list(set(self.children[0].firstpos + self.children[1].firstpos)))
 
@@ -244,27 +244,33 @@ class Dfa:
         for i in text:
 
             if q >= len(self.d):
-                print('Message NOT accepted, state has no transitions')
+                print('String NOT accepted, state has no transitions')
                 exit(0)
             if i not in self.d[q].keys():
-                print('Message NOT accepted, state has no transitions with the character')
+                print('String NOT accepted, state has no transitions with the character')
                 exit(0)
 
             q = self.d[q][i]
-        
+        result = ""
         if q in self.F:
-            print('Message accepted!')
+            result = "String accepted!"
+            print(result)
+
         else:
-            print('Message NOT accepted, stopped in an unfinal state')
+            result = "String NOT accepted, stopped in an unfinal state"
+            print(result)
+        return result
+
 
     def write(self):
         if os.path.exists("result.txt"):
             os.remove("result.txt") 
+        result = ""
         for i in range(len(self.Q)):
-            with open('result.txt', 'a', encoding='utf-8') as file:
-                file.write(str(i)+str(self.d[i])+str('F' if i in self.F else '')+'\n')
-                file.close()
-            print(i,self.d[i],'F' if i in self.F else '')
+            # print("State "+str(i)+" Transitions: "+str(self.d[i])+str('FINAL STATE' if i in self.F else ''))
+            result = result + "State "+str(i)+" Transitions: "+str(self.d[i])+str(' FINAL STATE' if i in self.F else '')+"\n"
+        return result
+        
 
 
 def preprocess(regex):
@@ -282,14 +288,14 @@ def clean_kleene(regex):
     return regex
 
 def gen_alphabet(regex):
-    return set(regex) - set('()|*')
+    return set(regex) - set('()+*')
 
 DEBUG = False
 use_lambda = False
 lambda_symbol = '_'
 alphabet = None
 
-regex = '(aa|b)*ab(bb|a)*'
+regex = '(aa+b)*ab(bb+a)*'
 
 if not is_valid_regex(regex):
     exit(0)
@@ -298,7 +304,3 @@ p_regex = preprocess(regex)
 alphabet = gen_alphabet(p_regex)
 extra = ''
 alphabet = alphabet.union(set(extra))
-
-
-
-

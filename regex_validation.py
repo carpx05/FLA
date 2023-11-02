@@ -24,17 +24,17 @@ def valid_operations(regex):
             if i == 0:
                 print('ERROR * with no argument at', i)
                 return False
-            if regex[i - 1] in '(|':
+            if regex[i - 1] in '(+':
                 print('ERROR * with no argument at', i)
                 return False
-        if c == '|':
+        if c == '+':
             if i == 0 or i == len(regex) - 1:
-                print('ERROR | with missing argument at', i)
+                print('ERROR + with missing argument at', i)
                 return False
-            if regex[i - 1] in '(|':
-                print('ERROR | with missing argument at', i)
+            if regex[i - 1] in '(+':
+                print('ERROR + with missing argument at', i)
                 return False
-            if regex[i + 1] in ')|':
-                print('ERROR | with missing argument at', i)
+            if regex[i + 1] in ')+':
+                print('ERROR + with missing argument at', i)
                 return False
     return True

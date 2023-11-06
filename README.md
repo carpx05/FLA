@@ -1,4 +1,3 @@
-# FLA
 # Regular Expression to DFA Converter
 
 This is a Python codebase for converting a regular expression (regex) into a Deterministic Finite Automaton (DFA). The program allows you to input a regular expression and a string, and it will generate the DFA, validate the string against it, and provide the result.

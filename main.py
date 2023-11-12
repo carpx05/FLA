@@ -1,7 +1,6 @@
 from regex_validation import is_valid_regex
 from preprocessing import preprocess, gen_alphabet
 from easygui import multenterbox, textbox
-from copy import deepcopy
 from utils import DEBUG, RegexTree
 
 title = "FLA - Regex to DFA"
@@ -20,11 +19,11 @@ def main():
     
     p_regex = preprocess(regex)
     alphabet = gen_alphabet(p_regex)
-    # add optional letters that don't appear in the expression
+
     extra = ''
     alphabet = alphabet.union(set(extra))
     
-    # Construct the RegexTree and DFA
+
     tree = RegexTree(p_regex)
     if DEBUG:
         tree.write()
@@ -40,8 +39,16 @@ def main():
     result_text = dfa.run(String)
     transition_text = transition_text +"\n" + result_text
     print(transition_text)
+
+    textbox("transitions:", title, transition_text)
+
+    print('\nThis is the transition table:\n')
+    transition_table = dfa.create_transition_table()
+    textbox("transition table", title, str(transition_table))
+
+    dfa_diagram = dfa.create_dfa_diagram()
             
-    result = textbox("result:", title, transition_text)
+
 
 if __name__ == "__main__":
     main()

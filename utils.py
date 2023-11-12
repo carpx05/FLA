@@ -1,6 +1,8 @@
 from copy import deepcopy
 from regex_validation import is_valid_regex
 import os
+from prettytable import PrettyTable
+import graphviz
 
 class RegexNode:
 
@@ -232,6 +234,51 @@ class Dfa:
         self.q0 = q0
         self.F = F
 
+    def create_transition_table(self):
+        """
+        Create a transition table for the DFA.
+        :return: String representation of the transition table
+        """
+        table = PrettyTable()
+    
+        header = list(map(lambda x: 'q' + str(x + 1), range(len(self.Q))))
+
+        header = ['Values'] + header
+        table.field_names = header
+        
+        for alphabet in self.V: #{'a', 'b'}
+            row = [alphabet]
+            for state in range(len(self.Q)): #[[0], [1, 2], [3]]
+                if alphabet in self.d[state].keys():
+                    row.append(str(self.d[state][alphabet]))
+                else:
+                    row.append('')
+            table.add_row(row)
+
+        return table
+    
+
+    def create_dfa_diagram(self):
+        """
+        Create a DFA diagram using Graphviz.
+        """
+        dot = graphviz.Digraph(format='png')
+
+        # Add states
+        for state in range(len(self.Q)):
+
+            dot.node("q"+str(state), shape='circle', peripheries='1' if state not in self.F else '2')
+
+        # Add transitions
+        for from_state, transitions in enumerate(self.d):
+            for alphabet, to_state in transitions.items():
+                dot.edge("q"+str(from_state), "q"+str(to_state), label=str(alphabet))
+
+        # Save the diagram
+        dot.render('dfa_diagram', view=True)
+
+
+    
     def run(self, text):
 
         if len(set(text) - self.V) != 0:

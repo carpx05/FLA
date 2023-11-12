@@ -1,0 +1,8 @@
+digraph {
+	q0 [peripheries=1 shape=circle]
+	q1 [peripheries=1 shape=circle]
+	q2 [peripheries=2 shape=circle]
+	q0 -> q1 [label=a]
+	q1 -> q1 [label=b]
+	q1 -> q2 [label=a]
+}

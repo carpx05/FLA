@@ -53,7 +53,9 @@ You can configure the regular expression and other options within the codebase. 
 
 Sample input and output can be viewed in input.png and output.png respectively.
 ![Input](input.png)
-![Output](output.png)
+![Transitions](output.png)
+![Transition Table](transition_table.png)
+![DFA](dfa_diagram.png)
 
 # Contributing
 
